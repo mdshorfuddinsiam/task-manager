@@ -1,0 +1,83 @@
+<x-admin-layout>
+    <x-slot name="header">
+        Edit Task
+    </x-slot>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="{{ route('admin.tasks.update', $task->id) }}">
+                @csrf
+                @method('PUT')
+
+                <!-- Title -->
+                <div class="mb-3">
+                    <label class="form-label">Title</label>
+                    <input type="text" name="title"
+                        class="form-control @error('title') is-invalid @enderror"
+                        value="{{ old('title', $task->title) }}">
+                    @error('title')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Description -->
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea name="description"
+                        class="form-control @error('description') is-invalid @enderror"
+                        rows="3">{{ old('description', $task->description) }}</textarea>
+                    @error('description')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Due Date -->
+                <div class="mb-3">
+                    <label class="form-label">Due Date</label>
+                    <input type="date" name="due_date"
+                        class="form-control @error('due_date') is-invalid @enderror"
+                        value="{{ old('due_date', $task->due_date) }}">
+                    @error('due_date')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Priority -->
+                <div class="mb-3">
+                    <label class="form-label">Priority</label>
+                    <select name="priority"
+                        class="form-select @error('priority') is-invalid @enderror">
+                        <option value="Low" {{ old('priority', $task->priority) == 'Low' ? 'selected' : '' }}>Low</option>
+                        <option value="Medium" {{ old('priority', $task->priority) == 'Medium' ? 'selected' : '' }}>Medium</option>
+                        <option value="High" {{ old('priority', $task->priority) == 'High' ? 'selected' : '' }}>High</option>
+                    </select>
+                    @error('priority')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Client -->
+                <div class="mb-3">
+                    <label class="form-label">Assign to Client</label>
+                    <select name="client_id"
+                        class="form-select @error('client_id') is-invalid @enderror">
+                        @foreach ($clients as $client)
+                            <option value="{{ $client->id }}"
+                                {{ old('client_id', $task->client_id) == $client->id ? 'selected' : '' }}>
+                                {{ $client->name }} ({{ $client->email }})
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('client_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Submit Button -->
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Update Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</x-admin-layout>
